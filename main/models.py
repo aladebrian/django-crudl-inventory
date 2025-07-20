@@ -5,8 +5,8 @@ import uuid
 class User(models.Model):
     USER_TYPES = [("customer", "Customer"), ("seller", "Seller"), ("admin", "Admin")]
     user_id = models.IntegerField(primary_key=True)
-    user_name = models.CharField(max_length=200)
-    user_type = models.CharField(max_length=30, choices=USER_TYPES, default="customer")
+    user_name = models.CharField(max_length=40)
+    user_type = models.CharField(max_length=10, choices=USER_TYPES, default="customer")
 
     def __str__(self):
         return self.user_name
@@ -24,6 +24,6 @@ class Product(models.Model):
     quantity = models.IntegerField()
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
-    seller_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="related seller", editable=False)
+    seller_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="related seller")
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="related category")
     
