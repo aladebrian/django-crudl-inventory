@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block title %}
+Product List
+{% endblock title %} 
+{% block content %}
+<h1>Product List</h1>
+<dl>
+    {% for product in products %}
+        <dt>{{ product.name }}</dt>
+        <dd>Description: {{ product.description }}</dd>
+        <dd>Price: {{ product.price }}</dd>
+        <dd>Quantity: {{ product.quantity }}</dd>
+        <dd>Seller: {{ product.seller_id }}</dd>
+        <dd>UUID: {{ product.product_id }}</dd>
+    {% endfor %}
+</dl>
+{% endblock content %}
