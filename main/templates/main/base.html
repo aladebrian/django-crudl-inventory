@@ -6,6 +6,17 @@
     <title>{% block title %} Home Page {% endblock %}</title>
   </head>
   <body>
-     {% block content %} Hello. Welcome to the Inventory Management System{% endblock %}
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+      </ul>
+      </nav>
+      {% if user.is_authenticated %}
+        {% block content %} Hello {{ user.user_name }}. Welcome to the Inventory Management System{% endblock %}
+      {% else %}
+        <p>Log in <a href="/login">Here</a></p>
+      {% endif %}
   </body>
 </html>

@@ -9,14 +9,14 @@ def next_id():
     return last_user.user_id + 1 if last_user else 1
 
 class CustomUserManager(models.Manager):
-    def create_user(self, user_id, user_name, user_type, password=None):
-        if not user_id:
-            raise ValueError("Users must have an user_id")
+    def create_user(self, user_name, user_id=None,user_type=None, password=None):
+        
         if not user_name:
             raise ValueError("Users must have a user_name")
         if not user_type:
-            raise ValueError("Users must have a user_type")
-        
+            user_type = "customer"
+        if not user_id:
+            user_id = next_id()
         user = self.model(
             user_id=user_id,
             user_name=user_name,
@@ -26,7 +26,7 @@ class CustomUserManager(models.Manager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, user_id, user_name, user_type='admin', password=None):
+    def create_superuser(self, user_name, user_id=None,  user_type='admin', password=None):
         user = self.create_user(
             user_id=user_id,
             user_name=user_name,
@@ -38,6 +38,8 @@ class CustomUserManager(models.Manager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
+    def get_by_natural_key(self, user_name):
+        return self.get(user_name=user_name)
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     USER_TYPES = [("customer", "Customer"), ("seller", "Seller"), ("admin", "Admin")]
     user_id = models.IntegerField(primary_key=True, default=next_id)
@@ -45,8 +47,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=10, choices=USER_TYPES, default="customer")
     is_staff = models.BooleanField(default=False, help_text=_('Designates whether the user can log into this admin site.'))
     is_active = models.BooleanField(default=True, help_text=_('Designates whether this user should be treated as active. Unselect this instead of deleting accounts.'))
-    USERNAME_FIELD = 'user_id'
-    REQUIRED_FIELDS = ['user_name', 'user_type']
+    USERNAME_FIELD = 'user_name'
+    REQUIRED_FIELDS = []
     objects = CustomUserManager()
     groups = models.ManyToManyField(
         Group,
