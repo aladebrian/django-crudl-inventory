@@ -13,10 +13,6 @@
         <li><a href="/register">Register</a></li>
       </ul>
       </nav>
-      {% if user.is_authenticated %}
-        {% block content %} Hello {{ user.user_name }}. Welcome to the Inventory Management System{% endblock %}
-      {% else %}
-        <p>Log in <a href="/login">Here</a></p>
-      {% endif %}
+      {% block content %} Hello {{ user.user_name }}. Welcome to the Inventory Management System{% endblock %}
   </body>
 </html>

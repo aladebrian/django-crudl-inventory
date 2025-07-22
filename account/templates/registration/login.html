@@ -6,7 +6,7 @@ Login
 
 {% load crispy_forms_tags %}
 {% block content %}
-    <form method="POST" class="form-group">
+    <form method="POST" class="form-group" action="{% url 'login' %}">
         {% csrf_token %}
         {{ form | crispy }}
         <button type="submit" class="btn btn-success"> Login </button>

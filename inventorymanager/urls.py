@@ -20,6 +20,7 @@ from account import views as av
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', av.register, name="register"),
+    path('logout/', av.logout_view, name="logout"),
     path('', include("main.urls")),
     path('', include('django.contrib.auth.urls')),
 ]
