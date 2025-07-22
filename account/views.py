@@ -16,7 +16,11 @@ def register(request):
             password = form.cleaned_data.get("password1")
             user_type = form.cleaned_data.get("user_type")
             print("username: ", user_name)
-            user = CustomUser.objects.create(user_name=user_name, password=password, user_type=user_type)        
+            user = CustomUser.objects.create_user( # type: ignore
+                user_name=user_name, 
+                password=password, 
+                user_type=user_type
+            )        
             login(request, user)
             return render(request, "main/base.html")
     form = RegisterForm()

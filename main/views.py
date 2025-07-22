@@ -49,13 +49,13 @@ def update(request, uuid=None):
     if not request.user.is_authenticated:
         return HttpResponse("You must be logged in to update a product.")
     if uuid is None:
-        if request.user.is_staff:
+        if request.user.user_type == "admin":
             products = Product.objects.all()
         else:
             products = Product.objects.filter(seller_id=request.user)
         return render(request, "main/update_list.html", {"products": products})
     product = Product.objects.get(product_id=uuid)
-    if request.user != product.seller_id and not request.user.is_staff:
+    if request.user != product.seller_id and not request.user.user_type == "admin":
         return HttpResponse("You can only update products you own.")
     if request.method == "POST":
         update_fields = ["name", "description", "price", "quantity", "updated_at", "category_id"]
@@ -72,7 +72,6 @@ def update(request, uuid=None):
                 name=category_name, 
                 description=category_description
             )
-       
         product.category_id = category
         product.updated_at = timezone.now()
         product.save(update_fields=update_fields)
@@ -84,7 +83,7 @@ def deleteProduct(request, uuid=None):
     if not request.user.is_authenticated:
         return HttpResponse("You must be logged in to delete a product.")
     if uuid is None:
-        if request.user.is_staff:
+        if request.user.user_type == "admin":
             products = Product.objects.all()
         else:
             products = Product.objects.filter(seller_id=request.user)
@@ -92,7 +91,7 @@ def deleteProduct(request, uuid=None):
     product = Product.objects.get(product_id=uuid)
     if request.user.user_type == "customer":
         return HttpResponse("Customers cannot delete products.")
-    if request.user != product.seller_id and not request.user.is_staff:
+    if request.user != product.seller_id and not request.user.user_type == "admin":
         return HttpResponse("You can only delete products you own.")
     if request.method == "POST":
         if request.POST.get("product_name") != product.name:

@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group, Permission
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group, Permission, BaseUserManager
 from django.utils import timezone
 
 def next_user_id():
@@ -8,7 +8,7 @@ def next_user_id():
     last_user = CustomUser.objects.order_by('user_id').last()
     return last_user.user_id + 1 if last_user else 1
 
-class CustomUserManager(models.Manager):
+class CustomUserManager(BaseUserManager):
     def create_user(self, user_name, user_id=None,user_type=None, password=None):
         
         if not user_name:
@@ -22,6 +22,9 @@ class CustomUserManager(models.Manager):
             user_name=user_name,
             user_type=user_type,
         )
+        if user_type == "admin":
+            user.is_staff = True
+            user.is_admin = True
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -38,8 +41,6 @@ class CustomUserManager(models.Manager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
-    def get_by_natural_key(self, user_name):
-        return self.get(user_name=user_name)
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     USER_TYPES = [("customer", "Customer"), ("seller", "Seller"), ("admin", "Admin")]
     user_id = models.IntegerField(primary_key=True, default=next_user_id)
