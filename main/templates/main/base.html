@@ -7,12 +7,30 @@
   </head>
   <body>
     <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
-      </ul>
-      </nav>
-      {% block content %} Hello {{ user.user_name }}. Welcome to the Inventory Management System{% endblock %}
+    <ul>
+      <li><a href="/">Home</a></li>
+      {% if user.is_authenticated %}
+      <li><a href="/logout">Logout</a></li>
+      {% else %}
+      <li><a href="/login">Login</a></li>
+      {% endif %}
+      <li><a href="/register">Register</a></li>
+      <li><a href="/list">List Products</a></li>
+      {% if user.is_authenticated %}
+      <li><a href="/create">Create Product</a></li>
+      <li><a href="/update">Update Product</a></li>
+      <li><a href="/delete">Delete Product</a></li>
+      {% endif %}
+    </ul>
+    </nav>
+    {% block content %} 
+    <h1>Welcome to the Inventory Management System</h1>
+    {% if user.is_authenticated %}
+      <p>Hello {{ user.user_name }}. You are logged in.</p>
+      <p><a href="/logout">Logout</a></p>
+    {% else %}
+      <p>You are not logged in. Please log in or register.</p>
+    {% endif %}
+    {% endblock content %}
   </body>
 </html>
