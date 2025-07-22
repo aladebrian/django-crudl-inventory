@@ -27,10 +27,11 @@
     <h1>Welcome to the Inventory Management System</h1>
     {% if user.is_authenticated %}
       <p>Hello {{ user.user_name }}. You are logged in.</p>
-      <p><a href="/logout">Logout</a></p>
     {% else %}
       <p>You are not logged in. Please log in or register.</p>
     {% endif %}
     {% endblock content %}
+    {{ extraContent|default_if_none:"" }}
+    
   </body>
 </html>

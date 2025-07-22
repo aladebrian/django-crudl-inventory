@@ -2,8 +2,8 @@ from django.utils import timezone
 from django.shortcuts import render, HttpResponse
 from .models import Category, Product, next_category_id
 
-def home(request):
-    return render(request, "main/base.html")
+def home(request, extraContent=""):
+    return render(request, "main/base.html", {"extraContent": extraContent})
 
 def read(request, uuid):
     product = Product.objects.get(product_id=uuid)
@@ -52,13 +52,14 @@ def update(request, uuid=None):
         products = Product.objects.filter(seller_id=request.user)
         return render(request, "main/update_list.html", {"products": products})
     product = Product.objects.get(product_id=uuid)
-    if request.user != product.seller_id:
+    if request.user != product.seller_id or not request.user.is_staff:
         return HttpResponse("You can only update products you own.")
     if request.method == "POST":
-        product.name = request.POST.get("name", product.name)
-        product.description = request.POST.get("description", product.description)
-        product.price = request.POST.get("price", product.price)
-        product.quantity = request.POST.get("quantity", product.quantity)
+        update_fields = ["name", "description", "price", "quantity", "category_id", "updated_at"]
+        product.name = request.POST.get("name")
+        product.description = request.POST.get("description")
+        product.price = request.POST.get("price")
+        product.quantity = request.POST.get("quantity")
         category_name = request.POST.get("category_name")
         category = Category.objects.filter(name=category_name).first()
         if not category:
@@ -70,8 +71,8 @@ def update(request, uuid=None):
             )
         product.category_id = category
         product.updated_at = timezone.now()
-        product.save()
-        return HttpResponse(f"Product {product.name} updated successfully!")
+        product.save(update_fields=update_fields)
+        return home(request, extraContent=f"Product {product.name} updated successfully!")
     categories = Category.objects.all()
     return render(request, "main/product_form.html", {"categories": categories, "product": product})
 

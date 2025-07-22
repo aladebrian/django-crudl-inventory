@@ -2,7 +2,7 @@
 {% block title %} Create Product {% endblock %} 
 
 {% block content %} 
-<form method="post" action="{{product|yesno:"/update/,/create/"}}">
+<form method="POST">
     {% csrf_token %}
     <p><label for="name">Product Name:</label>
     <input type="text" name="name" id="name" value="{{ product.name }}" required></p>
@@ -25,7 +25,7 @@
     {% endif %}
     <p><label for="category_description">Category Description:</label>
     <textarea name="category_description" id="category_description">{{ product.category_id.description }}</textarea></p>
-    <button type="submit", name="save">{{product|yesno:"Update Product, Create Product"}}</button>
+    <button type="submit" name="save">{{product|yesno:"Update Product, Create Product"}}</button>
 </form>
 <script>
 
