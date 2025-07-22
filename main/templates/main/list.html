@@ -12,6 +12,9 @@ Product List
         <dd>Quantity: {{ product.quantity }}</dd>
         <dd>Seller: {{ product.seller_id }}</dd>
         <dd>UUID: {{ product.product_id }}</dd>
+        <dd>Category: {{ product.category_id.name }}</dd>
+        <dd>Created At: {{ product.created_at }}</dd>
+        <dd>Updated At: {{ product.updated_at }}</dd>
     {% endfor %}
 </dl>
 {% endblock content %}

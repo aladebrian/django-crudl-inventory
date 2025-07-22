@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('user_id', models.IntegerField(default=account.models.next_id, primary_key=True, serialize=False)),
+                ('user_id', models.IntegerField(default=account.models.next_user_id, primary_key=True, serialize=False)),
                 ('user_name', models.CharField(max_length=40, unique=True)),
                 ('user_type', models.CharField(choices=[('customer', 'Customer'), ('seller', 'Seller'), ('admin', 'Admin')], default='customer', max_length=10)),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to.', related_name='customuser_set', to='auth.group', verbose_name='groups')),

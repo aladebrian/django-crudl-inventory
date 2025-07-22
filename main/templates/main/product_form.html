@@ -4,7 +4,26 @@
 {% block content %} 
 <form method="post" action="/create/">
     {% csrf_token %}
-    {{ form.as_p }}
+    <p><label for="name">Product Name:</label>
+    <input type="text" name="name" id="name" required></p>
+    <p><label for="description">Description:</label>
+    <textarea name="description" id="description" required></textarea></p>
+    <p><label for="price">Price:</label>
+    <input type="number" name="price" id="price" step="0.01" required></p>
+    <p><label for="quantity">Quantity:</label>
+    <input type="number" name="quantity" id="quantity" required></p>
+    <p><label for="category_name">Category Name:</label>
+    {% if categories %}
+        <datalist name="category_name" id="category_name" required>
+            {% for category in categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
+            {% endfor %}
+        </datalist></p>
+    {% else %}
+        <input type="text" name="category_name" id="category_name" required></p>
+    {% endif %}
+    <p><label for="category_description">Category Description:</label>
+    <textarea name="category_description" id="category_description"></textarea></p>
     <button type="submit", name="save">Create New</button>
 </form>
 {% endblock content%}

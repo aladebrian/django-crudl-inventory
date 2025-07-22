@@ -8,11 +8,3 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ["user_name", "password1", "password2", "user_type"]
-
-    # def save(self, commit=True):
-    #     user = super().save(commit=False)
-    #     user.user_type = self.cleaned_data["user_type"]
-    #     user.user_name = self.cleaned_data["user_name"]
-    #     if commit:
-    #         user.save()
-    #     return user

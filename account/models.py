@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group, Permission
 from django.utils import timezone
 
-def next_id():
+def next_user_id():
     """Generate a unique ID for the user."""
     last_user = CustomUser.objects.order_by('user_id').last()
     return last_user.user_id + 1 if last_user else 1
@@ -16,7 +16,7 @@ class CustomUserManager(models.Manager):
         if not user_type:
             user_type = "customer"
         if not user_id:
-            user_id = next_id()
+            user_id = next_user_id()
         user = self.model(
             user_id=user_id,
             user_name=user_name,
@@ -42,7 +42,7 @@ class CustomUserManager(models.Manager):
         return self.get(user_name=user_name)
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     USER_TYPES = [("customer", "Customer"), ("seller", "Seller"), ("admin", "Admin")]
-    user_id = models.IntegerField(primary_key=True, default=next_id)
+    user_id = models.IntegerField(primary_key=True, default=next_user_id)
     user_name = models.CharField(max_length=40, unique=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPES, default="customer")
     is_staff = models.BooleanField(default=False, help_text=_('Designates whether the user can log into this admin site.'))
