@@ -9,5 +9,9 @@
     <li>Quantity: {{ product.quantity }}</li>
     <li>Seller: {{ product.seller_id }}</li>
     <li>UUID: {{ product.product_id }}</li>
+    <li>Category: {{ product.category_id.name }}</dd>
+    <li>Category Description: {{ product.category_id.description }}</dd>
+    <li>Created At: {{ product.created_at }}</dd>
+    <li>Updated At: {{ product.updated_at }}</dd>
 </ul>
 {% endblock content %}

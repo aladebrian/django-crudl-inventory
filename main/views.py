@@ -40,7 +40,7 @@ def create(request):
             category_id=category,
             seller_id=request.user
         )
-        return HttpResponse(f"Product {product.name} created successfully!")
+        return home(request, extraContent=f"Product {product.name} created successfully!")
     
     categories = Category.objects.all()
     return render(request, "main/product_form.html", {"categories": categories})
@@ -49,13 +49,16 @@ def update(request, uuid=None):
     if not request.user.is_authenticated:
         return HttpResponse("You must be logged in to update a product.")
     if uuid is None:
-        products = Product.objects.filter(seller_id=request.user)
+        if request.user.is_staff:
+            products = Product.objects.all()
+        else:
+            products = Product.objects.filter(seller_id=request.user)
         return render(request, "main/update_list.html", {"products": products})
     product = Product.objects.get(product_id=uuid)
-    if request.user != product.seller_id or not request.user.is_staff:
+    if request.user != product.seller_id and not request.user.is_staff:
         return HttpResponse("You can only update products you own.")
     if request.method == "POST":
-        update_fields = ["name", "description", "price", "quantity", "category_id", "updated_at"]
+        update_fields = ["name", "description", "price", "quantity", "updated_at", "category_id"]
         product.name = request.POST.get("name")
         product.description = request.POST.get("description")
         product.price = request.POST.get("price")
@@ -69,6 +72,7 @@ def update(request, uuid=None):
                 name=category_name, 
                 description=category_description
             )
+       
         product.category_id = category
         product.updated_at = timezone.now()
         product.save(update_fields=update_fields)
@@ -77,18 +81,26 @@ def update(request, uuid=None):
     return render(request, "main/product_form.html", {"categories": categories, "product": product})
 
 def deleteProduct(request, uuid=None):
-    
     if not request.user.is_authenticated:
         return HttpResponse("You must be logged in to delete a product.")
-    
     if uuid is None:
-        products = Product.objects.filter(seller_id=request.user)
+        if request.user.is_staff:
+            products = Product.objects.all()
+        else:
+            products = Product.objects.filter(seller_id=request.user)
         return render(request, "main/delete_list.html", {"products": products})
     product = Product.objects.get(product_id=uuid)
-    if request.user != product.seller_id or not request.user.is_staff:
+    if request.user.user_type == "customer":
+        return HttpResponse("Customers cannot delete products.")
+    if request.user != product.seller_id and not request.user.is_staff:
         return HttpResponse("You can only delete products you own.")
     if request.method == "POST":
         if request.POST.get("product_name") != product.name:
-            return HttpResponse("Product deletion cancelled.")
+            return render(request, "main/delete_product.html", {
+                "product": product,
+                "error": "Product name does not match. Please try again."
+            })
+        name = product.name
         product.delete()
+        return home(request, extraContent=f"Product {name} deleted successfully!")
     return render(request, "main/delete_product.html", {"product": product})

@@ -4,17 +4,21 @@ Product List
 {% endblock title %} 
 {% block content %}
 <h1>Product List</h1>
-<dl>
-    {% for product in products %}
-        <dt>{{ product.name }}</dt>
-        <dd>Description: {{ product.description }}</dd>
-        <dd>Price: {{ product.price }}</dd>
-        <dd>Quantity: {{ product.quantity }}</dd>
-        <dd>Seller: {{ product.seller_id }}</dd>
-        <dd>UUID: {{ product.product_id }}</dd>
-        <dd>Category: {{ product.category_id.name }}</dd>
-        <dd>Created At: {{ product.created_at }}</dd>
-        <dd>Updated At: {{ product.updated_at }}</dd>
-    {% endfor %}
-</dl>
+{% if products %}
+    <dl>
+        {% for product in products %}
+            <dt><a href="/read/{{ product.product_id }}">{{ product.name }}</a></dt>
+            <dd>Description: {{ product.description }}</dd>
+            <dd>Price: {{ product.price }}</dd>
+            <dd>Quantity: {{ product.quantity }}</dd>
+            <dd>Seller: {{ product.seller_id }}</dd>
+            <dd>UUID: {{ product.product_id }}</dd>
+            <dd>Category: {{ product.category_id.name }}</dd>
+            <dd>Created At: {{ product.created_at }}</dd>
+            <dd>Updated At: {{ product.updated_at }}</dd>
+        {% endfor %}
+    </dl>
+{% else %}
+    <p>No products available.</p>
+{% endif %}
 {% endblock content %}

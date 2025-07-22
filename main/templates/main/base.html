@@ -13,10 +13,10 @@
       <li><a href="/logout">Logout</a></li>
       {% else %}
       <li><a href="/login">Login</a></li>
-      {% endif %}
       <li><a href="/register">Register</a></li>
+      {% endif %}
       <li><a href="/list">List Products</a></li>
-      {% if user.is_authenticated %}
+      {% if user.is_authenticated and user.user_type != "customer" %}
       <li><a href="/create">Create Product</a></li>
       <li><a href="/update">Update Product</a></li>
       <li><a href="/delete">Delete Product</a></li>

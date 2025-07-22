@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %} 
+{% block title %}
+Delete Product
+{% endblock title %} 
+{% block content %}
+<h1>These are the list of products you can delete:</h1>
+{% if products %}
+    <p>Click on the product you want to delete.</p>
+    {% for product in products %}
+        <p><a href="/delete/{{ product.product_id }}">{{ product.name }}</a></p>
+    {% endfor %}
+{% else %}
+    <p>You own no products. Create a product <a href="/create">here</a> first.</p>
+{% endif %}
+{% endblock content %}

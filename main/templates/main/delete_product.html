@@ -12,7 +12,9 @@
 </ul>
 <form method="post" action="/delete/{{ product.product_id }}">
     {% csrf_token %}
-    <label for="product_name">Type the product name to delete this product: </label>
-    <input type="text" name="product_name" id="product_name" required>
-<button type="submit", name="delete">Click here to delete your product</button>
+    <p><label for="product_name">Type the product name to delete this product: </label>
+    <input type="text" name="product_name" id="product_name" required></p>
+    <button type="submit", name="delete">Submit</button>
+    <p>{{ error }}</p>
+</form>
 {% endblock content %}
