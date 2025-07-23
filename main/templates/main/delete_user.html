@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %} 
+{% block title %}
+Delete User
+{% endblock title %} 
+{% block content %}
+<h1>Are you sure you want to delete this user?</h1>
+<ul>
+    <li>Username: {{ problem_user.user_name }}</li>
+    <li>ID: {{ problem_user.user_id }}</li>
+    <li>User Type: {{ problem_user.user_type }}</li>
+</ul>
+{% if problem_user.user_type == "seller" %}
+    <h2>Items owned by this user:</h2>
+    <ul>
+        {% for product in products %}
+            <li><a href="/read/{{product.product_id}}">{{ product.name }}</a> (ID: {{ product.product_id }})</li>
+        {% empty %}
+            <li>None.</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+    <p><label for="confirmation">Type 'yes' to confirm deletion:</label>
+    <input type="text" name="confirmation" id="confirmation" required></p>
+    <button type="submit", name="delete">Confirm deletion</button>
+    <p>{{ error }}</p>
+{% endblock content %}

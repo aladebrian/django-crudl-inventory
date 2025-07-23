@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import render, HttpResponse
+from account.models import CustomUser
 from .models import Category, Product, next_category_id
 
 def home(request, extraContent=""):
@@ -79,7 +80,7 @@ def update(request, uuid=None):
     categories = Category.objects.all()
     return render(request, "main/product_form.html", {"categories": categories, "product": product})
 
-def deleteProduct(request, uuid=None):
+def delete_product(request, uuid=None):
     if not request.user.is_authenticated:
         return HttpResponse("You must be logged in to delete a product.")
     if uuid is None:
@@ -103,3 +104,24 @@ def deleteProduct(request, uuid=None):
         product.delete()
         return home(request, extraContent=f"Product {name} deleted successfully!")
     return render(request, "main/delete_product.html", {"product": product})
+
+def delete_user(request, user_id=None):
+    if not request.user.is_authenticated or not request.user.user_type == "admin":
+        return HttpResponse("You must be an admin to delete users.")
+    if user_id is None:
+        users = CustomUser.objects.exclude(user_type='admin')
+        return render(request, "main/delete_user_list.html", {"users": users})
+    user = CustomUser.objects.get(user_id=user_id)
+    products = Product.objects.filter(seller_id=user)
+    if not user:
+        return render(request, "main/delete_user.html", {"error": "User not found."})
+    if request.method == "POST":
+        print("here")
+        if request.POST.get("confirmation") != "yes":
+            return render(request, "main/delete_user.html", {
+                "problem_user": user,
+                "error": "You must confirm deletion by typing 'yes'."
+            })
+        user.delete()
+        return home(request, extraContent=f"User {user.user_name} deleted successfully!")
+    return render(request, "main/delete_user.html", {"problem_user": user, "products": products})

@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %} 
+{% block title %}
+User Deletion
+{% endblock title %} 
+{% block content %}
+<h1>Click on the user you want to delete</h1>
+{% if users %}
+    {% for user in users %}
+        <p><a href="/delete_user/{{ user.user_id }}">{{ user.user_name }}</a></p>
+    {% endfor %}
+{% else %}
+    <p>No users available to delete.</p>
+{% endif %}
+{% endblock content %}

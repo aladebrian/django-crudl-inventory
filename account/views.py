@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 from .forms import RegisterForm
 from django.contrib.auth import authenticate, login, logout
 from .models import CustomUser
+
 # Create your views here.
 def register(request):
     form = RegisterForm()
@@ -30,3 +31,4 @@ def logout_view(request):
     if request.method == "POST":
         return HttpResponse("You have been logged out. <a href='/'>Go to Home</a>")
     return render(request, "account/logout.html", {"message": "You have been logged out."})
+
