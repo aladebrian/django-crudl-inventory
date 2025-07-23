@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.shortcuts import render, HttpResponse
 from account.models import CustomUser
 from .models import Category, Product, next_category_id
-
+from django.core.paginator import Paginator
 def home(request, extraContent=""):
     return render(request, "main/base.html", {"extraContent": extraContent})
 
@@ -10,9 +10,12 @@ def read(request, uuid):
     product = Product.objects.get(product_id=uuid)
     return render(request, "main/read.html", {"product": product})
 
-def list(request, num=1):
-    ls = Product.objects.all()
-    return render(request, "main/list.html", {"products": ls})
+def list(request):
+    p = Paginator(Product.objects.all(), 5)
+    page = request.GET.get("page")
+    products = p.get_page(page)
+
+    return render(request, "main/list.html", {"products": products})
 
 def create(request):
     if not request.user.is_authenticated:
